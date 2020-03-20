@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>纱-涤纶比例计算器</title>
+    <style>
+      html {
+        font-size: 13.33333vw;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-size: 12px;
+        height: 100%;
+        background: #efefef;
+      }
+      header {
+        font-size: 0.4rem;
+        text-align: center;
+        color: #ffffff;
+        background: linear-gradient(
+          to right,
+          #000 0%,
+          #604020 33%,
+          #333 66%,
+          #604020 100%
+        );
+        height: 1.1rem;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        justify-content: center;
+      }
+      footer {
+        text-align: center;
+        font-size: 0.14rem;
+        color: #aaa;
+        padding: 0.1rem 0;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        left: 0;
+      }
+      main {
+        padding: 0 5%;
+      }
+      input[type="button"] {
+        height: 0.88rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        color: #fff;
+        background: linear-gradient(to right, #000 0%, #604020 100%);
+        font-weight: 600;
+        width: 100%;
+        border-radius: 0.1rem;
+        outline: none;
+        font-size: 0.28rem;
+        transition: 0.3s;
+      }
+      input[type="button"]:active {
+        background: linear-gradient(to right, #604020 0%, #000 100%);
+      }
+      input[type="number"] {
+        width: 100%;
+        box-sizing: border-box;
+        outline: none;
+        border: none;
+        background: transparent;
+        position: relative;
+        padding: 0.2rem 0.24rem;
+        flex-shrink: 2;
+      }
+      .border-line {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to right, #000 0%, #604020 100%);
+        height: 2px;
+        transform: scaleY(0.5);
+        transition: 0.3s;
+      }
+      label,
+      p {
+        font-size: 0.32rem;
+      }
+      input[type="number"]:focus + .border-line {
+        left: 0.24rem;
+      }
+      .row {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        position: relative;
+        margin: 0.24rem 0;
+      }
+      span {
+        flex-shrink: 0;
+        margin: 0 0.1rem;
+      }
+      .tip {
+        font-size: 0.24rem;
+        color: #999;
+      }
+      #result {
+        height: 2rem;
+        font-size: 0.24rem;
+        color: #333;
+      }
+      #warn {
+        font-size: 0.24rem;
+        color: #f34;
+        height: 0.24rem;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      纱-涤纶比例计算器
+    </header>
+    <main>
+      <p>请输入已知比例： <span class="tip">注：单位千克</span></p>
+
+      <label for="rong">纱：</label>
+      <div class="row">
+        <input type="number" placeholder="在这里输入" id="rong1" />
+        <div class="border-line"></div>
+      </div>
+      <label for="rong">涤纶：</label>
+      <div class="row">
+        <input type="number" placeholder="在这里输入" id="di1" />
+        <div class="border-line"></div>
+      </div>
+
+      <p>请输入已有值：</p>
+      <div class="row">
+        <input type="number" id="has" placeholder="在这里输入" />
+        <div class="border-line"></div>
+        <input type="radio" name="name" id="di_check" checked /><span
+          >涤纶</span
+        >
+        <input type="radio" name="name" id="rong_check" /> <span>纱</span>
+      </div>
+      <div id="warn"></div>
+      <div id="result"></div>
+      <br />
+      <div class="row">
+        <input type="button" value="计算结果" id="submit" />
+      </div>
+    </main>
+    <footer>本计算器由kyaruary提供</footer>
+    <script>
+      var $$ = function(selector) {
+        return document.querySelector(selector);
+      };
+      var $rong1 = $$("#rong1");
+      var $di1 = $$("#di1");
+      var $has = $$("#has");
+      var $wran = $$("#warn");
+      var $result = $$("#result");
+      var $di_check = $$("#di_check");
+      var $rong_check = $$("#rong_check");
+      var $btn = $$("#submit");
+      $btn.addEventListener("click", function() {
+        $wran.innerText = "";
+        var $rong1_num = +$rong1.value;
+        var $di1_num = +$di1.value;
+        var $has_num = +$has.value;
+        if ($rong1_num && $di1_num && $has_num) {
+          // 最终计算结果
+          if ($di_check.checked) {
+            // 选择了涤纶，最后输出纱的数量
+            var r = ($rong1_num / $di1_num) * $has_num;
+            $result.innerText = `经过计算，混合${$has_num}千克涤纶需要${r}千克纱`;
+          }
+          if ($rong_check.checked) {
+            // 纱，最后输出涤纶的数量
+            var d = ($di1_num / $rong1_num) * $has_num;
+            $result.innerText = `经过计算，混合${$has_num}千克纱需要${d}千克涤纶`;
+          }
+        } else {
+          // 请输入完整的值
+          $wran.innerText = "请输入完整的值";
+        }
+        setTimeout(() => {
+          $wran.innerText = "";
+        }, 3000);
+      });
+    </script>
+  </body>
+</html>
